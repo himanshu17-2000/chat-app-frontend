@@ -1,8 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router";
 import { isExpired, decodeToken } from "react-jwt";
 import { UserContext } from "../contexts/UserContexts";
+import { ToastNotification } from "./ToastNotification";
 function Authentication() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
@@ -13,23 +15,45 @@ function Authentication() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const url =
-      isLoginOrRegister === "register" ? "/auth/register" : "/auth/login";
-    axios
-      .post(`${url}`, { username, password })
-      .then((response) => {
-        localStorage.setItem("token", response.data["token"]);
-        const user = decodeToken(response.data["token"]);
-        setLoggedinUser(user.username);
-        setId(user.id);
-        navigate("/");
-      })
-      .catch((err) => {
-        if (err.response.status === 409) {
-          setisLoginOrRegister("login");
+    if (username !== "" && password !== "") {
+      const url =
+        isLoginOrRegister === "register" ? "/auth/register" : "/auth/login";
+      axios
+        .post(`${url}`, { username, password })
+        .then((response) => {
+          localStorage.setItem("token", response.data["token"]);
+          const user = decodeToken(response.data["token"]);
+          setLoggedinUser(user.username);
+          setId(user.id);
+          navigate("/");
           return;
-        }
+        })
+        .catch((err) => {
+          if (err.response.status === 401) {
+            toast.error("invalid password", {
+              position: toast.POSITION.TOP_LEFT,
+            });
+            return;
+          } else if (err.response.status === 400) {
+            setisLoginOrRegister("register");
+            toast.error("User not Found", {
+              position: toast.POSITION.TOP_LEFT,
+            });
+            return;
+          } else if (err.response.status === 409) {
+            setisLoginOrRegister("login");
+            toast.warn("User already exists", {
+              position: toast.POSITION.TOP_LEFT,
+            });
+            return;
+          }
+        });
+    } else {
+      toast.warn("fill all fields", {
+        position: toast.POSITION.TOP_LEFT,
       });
+      return;
+    }
   };
   useEffect(() => {
     if (localStorage.getItem("token")) {
@@ -85,6 +109,7 @@ function Authentication() {
             </div>
           )}
         </div>
+        <ToastContainer />
       </form>
     </div>
   );

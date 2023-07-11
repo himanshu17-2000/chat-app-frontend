@@ -2,7 +2,8 @@ import React, { useContext, useEffect } from "react";
 import { UserContext } from "../contexts/UserContexts";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Authentication from "../components/Authentication";
-import Chat from "../components/Chat";
+import Chat from "../components/Chats/Chat";
+
 export default function AppRoutes() {
   const { loggedinUser, id, setLoggedinUser, setId } = useContext(UserContext);
   return (
