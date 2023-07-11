@@ -7,12 +7,15 @@ import { toFormData } from "axios";
 import ChatContacts from "./ChatContacts";
 import ChatHeader from "./ChatHeader";
 import ChatBox from "./ChatBox";
+import { uniqBy } from "lodash";
 function Chat() {
   const navigate = useNavigate();
-  const [onlinePeople, setOnlinePeople] = useState({});
+
   const [ws, setWs] = useState(null);
-  const [newMessage, setNewMessage] = useState("");
+  const [onlinePeople, setOnlinePeople] = useState({});
   const [selectedUserId, setSelectedUserId] = useState(null);
+  const [newMessage, setNewMessage] = useState("");
+  const [messages, setMessages] = useState([]);
   const { loggedinUser, id, setLoggedinUser, setId } = useContext(UserContext);
 
   useEffect(() => {
@@ -30,7 +33,6 @@ function Chat() {
   }, []);
 
   useEffect(() => {
-    // if (loggedinUser && id) toast.success("welcome " + loggedinUser);
     const ws = new WebSocket(
       "ws://localhost:5000",
       localStorage.getItem("token")
@@ -49,15 +51,37 @@ function Chat() {
 
   const handleMessage = (event) => {
     const messageData = JSON.parse(event.data);
+    console.log({ event, messageData });
     if ("online" in messageData) {
       showOnlinePeople(messageData.online);
+    } else if ("text" in messageData) {
+      if (messageData.sender === selectedUserId) {
+        setMessages(prev => ([...prev, {...messageData}]));
+      }
     }
+  };
+  const sendMessage = (e) => {
+    e.preventDefault();
+    ws.send(
+      JSON.stringify({
+        recipient: selectedUserId,
+        text: newMessage,
+        sender: id,
+      })
+    );
+    setNewMessage("");
+    setMessages((prev) => [
+      ...prev,
+      { text: newMessage, isOur: true, sender: id },
+    ]);
+   
   };
 
   const onlinePeopleExcludeOurUser = { ...onlinePeople };
   delete onlinePeopleExcludeOurUser[id];
 
-  const selectContact = (userId) => {};
+  const messagesWithoutDuplicate = uniqBy(messages, "id");
+
   return (
     <div>
       <div className="flex h-screen">
@@ -71,9 +95,11 @@ function Chat() {
         </div>
         <div className="bg-fuchsia-950 w-2/3 text-white p-2 flex flex-col">
           <ChatBox
+            sendMessage={sendMessage}
             newMessage={newMessage}
             setNewMessage={setNewMessage}
             selectedUserId={selectedUserId}
+            messagesWithoutDuplicate={messagesWithoutDuplicate}
           />
         </div>
       </div>
