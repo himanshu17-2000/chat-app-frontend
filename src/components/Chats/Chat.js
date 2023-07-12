@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { UserContext } from "../../contexts/UserContexts";
 import { useNavigate } from "react-router";
 import { isExpired, decodeToken } from "react-jwt";
@@ -78,7 +78,6 @@ function Chat() {
     }]));
 
   };
-
 
   const onlinePeopleExcludeOurUser = { ...onlinePeople };
   delete onlinePeopleExcludeOurUser[id];
