@@ -10,7 +10,6 @@ import ChatBox from "./ChatBox";
 import { uniqBy } from "lodash";
 function Chat() {
   const navigate = useNavigate();
-
   const [ws, setWs] = useState(null);
   const [onlinePeople, setOnlinePeople] = useState({});
   const [selectedUserId, setSelectedUserId] = useState(null);
@@ -51,17 +50,17 @@ function Chat() {
 
   const handleMessage = (event) => {
     const messageData = JSON.parse(event.data);
-    console.log({ event, messageData });
+    console.log(event, messageData)
     if ("online" in messageData) {
       showOnlinePeople(messageData.online);
-    } else if ("text" in messageData) {
-      if (messageData.sender === selectedUserId) {
-        setMessages(prev => ([...prev, {...messageData}]));
-      }
+    } else if ('text' in messageData) {
+      console.log(messageData)
+      setMessages(prev => ([...prev, { ...messageData }]))
     }
   };
   const sendMessage = (e) => {
     e.preventDefault();
+    console.log("message sending initated")
     ws.send(
       JSON.stringify({
         recipient: selectedUserId,
@@ -70,18 +69,21 @@ function Chat() {
       })
     );
     setNewMessage("");
-    setMessages((prev) => [
-      ...prev,
-      { text: newMessage, isOur: true, sender: id },
-    ]);
-   
+    setMessages((prev) => ([...prev, {
+      isOur: true,
+      text: newMessage,
+      sender: id,
+      recipient: selectedUserId,
+      id: Date.now()
+    }]));
+
   };
+
 
   const onlinePeopleExcludeOurUser = { ...onlinePeople };
   delete onlinePeopleExcludeOurUser[id];
 
-  const messagesWithoutDuplicate = uniqBy(messages, "id");
-
+  const messageWithoutDupes = uniqBy(messages, 'id')
   return (
     <div>
       <div className="flex h-screen">
@@ -97,13 +99,14 @@ function Chat() {
           <ChatBox
             sendMessage={sendMessage}
             newMessage={newMessage}
+            messages={messages}
             setNewMessage={setNewMessage}
             selectedUserId={selectedUserId}
-            messagesWithoutDuplicate={messagesWithoutDuplicate}
+            messageWithoutDupes={messageWithoutDupes}
           />
         </div>
       </div>
-      <div
+      {/* <div
         onClick={(e) => {
           localStorage.removeItem("token");
           setLoggedinUser(null);
@@ -114,7 +117,7 @@ function Chat() {
       >
         <h1 className="text-white">LOGOUT</h1>
       </div>
-      <ToastContainer />
+      <ToastContainer /> */}
     </div>
   );
 }
