@@ -13,7 +13,7 @@ export default function AppRoutes() {
           <Route exact path="" element={<Chat />} />
           <Route exact path="authenticate" element={<Authentication />} />
         </Routes>
-      </BrowserRouter>
+      </BrowserRouter> 
     </div>
   );
 }

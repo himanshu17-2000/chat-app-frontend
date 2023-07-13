@@ -9,7 +9,7 @@ function App() {
     <div>
       <UserContextProvider>
         <AppRoutes />
-      </UserContextProvider>
+      </UserContextProvider> 
     </div>
   );
 }

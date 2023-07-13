@@ -5,7 +5,7 @@ import { useNavigate } from "react-router";
 import { isExpired, decodeToken } from "react-jwt";
 import { UserContext } from "../contexts/UserContexts";
 import { ToastNotification } from "./ToastNotification";
-function Authentication() {
+function Authentication() { 
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");

@@ -15,7 +15,7 @@ export const ToastNotification = (msg) => {
     position: toast.POSITION.BOTTOM_LEFT,
   });
 
-  toast.info("Info Notification !", {
+  toast.info("Info Notification !", { 
     position: toast.POSITION.BOTTOM_CENTER,
   });
 
