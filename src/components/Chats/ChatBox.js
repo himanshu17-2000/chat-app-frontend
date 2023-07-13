@@ -24,14 +24,8 @@ function ChatBox({
     <>
       <div className="flex-grow">
         {!selectedUserId && (
-          <div
-            className="flex h-full flex-grow items-center 
-          justify-center"
-          >
-            <div className=" text-fuchsia-300">
-              {" "}
-              &larr; please select a person
-            </div>
+          <div className="flex h-full flex-grow items-center justify-center">
+            <div className="text-gray-300">&larr; Select a person from the sidebar</div>
           </div>
         )}
 
@@ -48,10 +42,11 @@ function ChatBox({
                   </div>
                 </div>
               ))}
+              <div ref={divUnderMessages}></div>
             </div>
           </div>
         )}
-        <div ref={divUnderMessages}></div>
+
       </div>
       {!!selectedUserId && (
         <div className="flex gap-2 ">
