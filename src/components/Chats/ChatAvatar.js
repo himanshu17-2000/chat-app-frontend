@@ -1,20 +1,20 @@
-export default function ChatAvatar({ userId, username }) {
-  const colors = [
-    "bg-red-300",
-    "bg-green-300",
-    "bg-slate-300",
-    "bg-blue-300",
-    "bg-yellow-300",
-    "bg-teal-300",
-  ];
-  const userIdBase16 = parseInt(userId, 16);
+export default function ChatAvatar({ userId, username, online }) {
+  const colors = ['bg-teal-500', 'bg-red-500',
+    'bg-green-500', 'bg-purple-500',
+    'bg-blue-500', 'bg-yellow-500',
+    'bg-orange-500', 'bg-pink-500', 'bg-fuchsia-500', 'bg-rose-500'];
+  const userIdBase10 = parseInt(userId.substring(10), 16);
+  const colorIndex = userIdBase10 % colors.length;
+  const color = colors[colorIndex];
   return (
-    <div
-      className={`w-9 h-9 ${
-        colors[userIdBase16 % colors.length]
-      }  flex items-center rounded-full border border-fuchsia-900`}
-    >
-      <div className=" opacity-70 text-center w-full">{username[0]}</div>
+    <div className={"border border-purple-500 w-9 h-9 relative rounded-full flex items-center " + color}>
+      <div className="text-center capitalize  w-full opacity-80 ">{username[0]}</div>
+      {online && (
+        <div className="absolute w-3 h-3 bg-green-400 bottom-0 right-0 rounded-full border border-grey"></div>
+      )}
+      {!online && (
+        <div className="absolute w-3 h-3 bg-gray-400 bottom-0 right-0 rounded-full border border-grey"></div>
+      )}
     </div>
   );
 }

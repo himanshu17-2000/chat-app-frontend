@@ -1,39 +1,33 @@
 import React from "react";
-import ChatAvatar from "./ChatAvatar";
+import ChatPerson from "./ChatPerson";
 
 export default function ChatContacts({
   onlinePeopleExcludeOurUser,
   setSelectedUserId,
   selectedUserId,
+  offlinePeople
 }) {
   return (
     <>
       {Object.keys(onlinePeopleExcludeOurUser).map((userId) => (
-        <div
-          onClick={() => {
-            setSelectedUserId(userId);
-          }}
-          className={`py-2 pl-4 rounded mt-1 ml-1  flex items-center gap-2 cursor-pointer ${
-            userId === selectedUserId
-              ? " bg-purple-500 border-l-4 border-purple-900"
-              : ""
-          }`}
-          key={userId}
-        >
-          <ChatAvatar
-            username={onlinePeopleExcludeOurUser[userId]}
-            userId={userId}
-          />
-          <span
-            className={`p-1  ${
-              userId === selectedUserId ? " text-white " : " text-purple-950"
-            }`}
-          >
-            {" "}
-            {onlinePeopleExcludeOurUser[userId]}
-          </span>
-        </div>
+        <ChatPerson
+          id={userId}
+          username={onlinePeopleExcludeOurUser[userId]}
+          onClick={(userId) => setSelectedUserId(userId)}
+          selected={userId === selectedUserId}
+          online={true}
+        />
       ))}
+      {Object.keys(offlinePeople).map((userId) => (
+        <ChatPerson
+          id={userId}
+          username={offlinePeople[userId]}
+          onClick={(userId) => setSelectedUserId(userId)}
+          selected={userId === selectedUserId}
+          online={false}
+        />
+      ))}
+
     </>
   );
 }
