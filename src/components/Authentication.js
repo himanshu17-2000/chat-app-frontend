@@ -16,8 +16,7 @@ function Authentication() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (username !== "" && password !== "") {
-      const url =
-        isLoginOrRegister === "register" ? "/auth/register" : "/auth/login";
+      const url = isLoginOrRegister === "register" ? "/auth/register" : "/auth/login";
       axios
         .post(`${url}`, { username, password })
         .then((response) => {
