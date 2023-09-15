@@ -11,7 +11,7 @@ export default function AppRoutes() {
       <BrowserRouter>
         <Routes>
           {/* <Route exact path="" element={<Chat />} /> */}
-          <Route exact path="authenticate" element={<Authentication />} />
+          <Route exact path="" element={<Authentication />} />
         </Routes>
       </BrowserRouter> 
     </div>
