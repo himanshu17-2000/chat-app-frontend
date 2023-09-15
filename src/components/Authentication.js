@@ -107,11 +107,13 @@ function Authentication() {
               </button>{" "}
             </div>
           )}
+          <div>
+            <h1>Hello this is a chat app </h1>
+          </div>
         </div>
         <ToastContainer />
       </form>
     </div>
   );
 }
-
 export default Authentication;
